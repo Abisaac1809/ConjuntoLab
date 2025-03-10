@@ -1,3 +1,3 @@
 from Vista.MainVista import Aplicacion
 
-Aplicacion((1000, 500))
+Aplicacion((1200, 600))
