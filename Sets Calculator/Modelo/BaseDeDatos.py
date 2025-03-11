@@ -21,7 +21,7 @@ class BaseDeDatos():
 
         for usuario in datos["usuarios"]:
             if usuario["nombre"] == nombre:
-                return False
+                return True
         contraseña_bytes = contraseña.encode("utf-8")
         salt = bcrypt.gensalt()
         contraseña_hasheada = bcrypt.hashpw(contraseña_bytes, salt)
@@ -31,7 +31,7 @@ class BaseDeDatos():
         }
         datos["usuarios"].append(nuevo_usuario)
         self.guardar_datos(datos)
-        return True
+        return False
 
     def iniciar_sesion(self,nombre, contraseña):
         datos = self.cargar_datos()

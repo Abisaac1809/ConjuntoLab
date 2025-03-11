@@ -1,0 +1,16 @@
+{
+    "usuarios": [
+        {
+            "nombre": "Abisaac",
+            "contrase\u00f1a": "$2b$12$ZSvbz3FFFqBnEEYzgCfzOe.tbKUA0qrWf9e50yuNUah6SGyR/Kxtm"
+        },
+        {
+            "nombre": "Emily",
+            "contrase\u00f1a": "$2b$12$.rP1VZHAFTE0VBSPXl8c1.UyPupSxT.Q1eZP5RAp6fZ6bawJmqAHG"
+        },
+        {
+            "nombre": "juan",
+            "contrase\u00f1a": "$2b$12$h1qApeeqx3EUHA7bzeM1nOsV0fPdOq4H8c83OH0avrP6tpHfecaby"
+        }
+    ]
+}

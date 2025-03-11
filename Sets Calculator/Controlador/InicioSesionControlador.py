@@ -2,28 +2,30 @@ import re
 from Modelo.BaseDeDatos import BaseDeDatos
 
 class InicioSesionControlador():
-    def __init__(self, vista):
-        self.vista = vista
-        self.modelo = BaseDeDatos("Modelo//Datos.json")
+    def __init__(self, controlador_vista):
+        self.base_datos = BaseDeDatos("Modelo//Datos.json")
+        self.controlador_vista = controlador_vista
 
-    def inicio_sesion(self, nombre, contraseña):
-        mensaje = self.modelo.iniciar_sesion(nombre, contraseña)
+    def inicio_sesion(self, nombre, contraseña, variable):
+        mensaje = self.base_datos.iniciar_sesion(nombre, contraseña)
         if (mensaje == "exito"):
-            pass
+            self.controlador_vista.cambiar_frame("Calculadora")
         elif (mensaje == "incorrecta"):
-            self.vista.menu.usuario_existe_var.set("Contraseña Incorrecta") 
+            variable.set("Contraseña Incorrecta") 
         else:
-            self.vista.menu.usuario_existe_var.set("Usuario No Existe") 
+            variable.set("Usuario No Existe") 
 
-    def registrar_usuario(self, nombre, contraseña):
+    def registrar_usuario(self, nombre, contraseña, variable):
         if (self.validar_usuario(nombre) == False):
-            self.vista.menu.usuario_existe_var.set("Usuario Inválido: (4-15 caracteres no especiales)") 
+            variable.set("Usuario Inválido: (4-15 caracteres no especiales)") 
         elif (self.validar_contraseña(contraseña) == False):
-            self.vista.menu.usuario_existe_var.set("Contraseña inválida: (8-20 caracteres)") 
+            variable.set("Contraseña inválida: (8-20 caracteres)") 
         else:
-            mensaje = self.modelo.registrar_usuario(nombre, contraseña)
-            if (mensaje == False):
-                self.vista.menu.usuario_existe_var.set("Usuario ya existe") 
+            usuario_existe = self.base_datos.registrar_usuario(nombre, contraseña)
+            if usuario_existe:
+                variable.set("Usuario ya existe") 
+            else:
+                self.controlador_vista.cambiar_frame("Calculadora")
 
     def validar_usuario(self, usuario):
         patron = r"^[a-zA-Z0-9_]{4,15}$"
