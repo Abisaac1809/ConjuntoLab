@@ -36,6 +36,11 @@ class ListaConjunto(ctk.CTkScrollableFrame):
         widget = self.conjunto_label[conjunto]
         widget.destroy()
         self.conjunto_label.pop(conjunto)
+        if self.controlador != None:
+            if self.conjunto_seleccionado == 'U':
+                for widget in self.conjunto_label.values():
+                    widget.destroy()
+                self.conjunto_label.clear()
         
     def get_elementos(self):
         return set(self.conjunto_label.keys())

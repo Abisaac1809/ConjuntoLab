@@ -1,12 +1,13 @@
 import customtkinter as ctk
 
 
-class VentanaRandom(ctk.CTkToplevel):
-    def __init__(self, master, controlador, universal_existe, lista_conjuntos):
+class VentanaRandomUniversal(ctk.CTkToplevel):
+    def __init__(self, master, controlador, lista_conjuntos):
         super().__init__(master=master)
         self.master = master
         self.transient(master)  
         self.geometry("600x600")
+        self.title("Crear conjunto universal")
         self.iconbitmap("Vista//Materiales//icono.ico")
         self.controlador = controlador
         self.lista_conjuntos = lista_conjuntos
@@ -15,12 +16,8 @@ class VentanaRandom(ctk.CTkToplevel):
         self.configurar_widgets()
         self.pack_widgets()
         
-        if not universal_existe:
-            self.title("Crear conjunto universal")
-            self.nombre_entry.insert(0, "U")
-            self.nombre_entry.configure(state="disabled")
-        else:
-            self.title("Crear Conjunto")
+        self.nombre_entry.insert(0, "U")
+        self.nombre_entry.configure(state="disabled")
 
     def crear_widgets(self):
 
@@ -36,7 +33,13 @@ class VentanaRandom(ctk.CTkToplevel):
             font=("Century Gothic", 25),
             corner_radius=20
             )
-
+        
+        self.numeros_label = ctk.CTkLabel(
+            self, 
+            font=("Century Gothic", 20),
+            text_color="red",
+            text=""
+            )
         self.numero_elementos_entry = ctk.CTkEntry(
             self,
             placeholder_text="Ingresa el número de elementos",
@@ -69,8 +72,7 @@ class VentanaRandom(ctk.CTkToplevel):
 
     def configurar_widgets(self):
         self.caja_opciones.set("Enteros")
-        
-        self.nombre_entry.bind("<KeyRelease>", self.validar_entrada)
+
         self.numero_elementos_entry.bind("<KeyRelease>", self.validar_entrada_numero)
         self.nombre_entry.bind("<Return>", lambda evento: self.numero_elementos_entry.focus())
         self.crear_boton.bind("<Button-1>", self.crear_conjunto)
@@ -78,7 +80,8 @@ class VentanaRandom(ctk.CTkToplevel):
     def pack_widgets(self):
         self.titulo.pack(expand=True, fill="both", pady=20, padx=40)
         self.nombre_entry.pack(expand=True, fill="both", padx=40, pady=10)
-        self.numero_elementos_entry.pack(expand=True, fill="both", padx=40, pady=10)
+        self.numeros_label.pack(fill="x", padx=40, pady=(10,0))
+        self.numero_elementos_entry.pack(expand=True, fill="both", padx=40, pady=(5, 10))
         self.opciones_label.pack(fill="x", pady=(20, 5))
         self.caja_opciones.pack(expand=True, fill="x", padx=40, pady=10)
         self.crear_boton.pack(expand=True, fill="both", padx=60, pady=(5, 20))
@@ -87,41 +90,27 @@ class VentanaRandom(ctk.CTkToplevel):
         nombre = self.nombre_entry.get()
         n_elementos = self.numero_elementos_entry.get()
         tipo = self.caja_opciones.get()
-        self.controlador.crear_conjunto_random(nombre, n_elementos, tipo)
+        self.controlador.crear_universal_random(nombre, n_elementos, tipo)
         self.lista_conjuntos.agregar_conjunto(nombre)
         self.master.destroy()
         self.destroy()
 
-    def validar_entrada(self, event):
-        texto_actual = self.nombre_entry.get()
-        
-        if event.keysym == "BackSpace":
-            return
-        
-        if len(texto_actual) > 1:
-            self.nombre_entry.delete(1, "end") 
-            
-        if texto_actual and texto_actual.islower():
-            texto_actual = texto_actual.upper()
-            self.nombre_entry.delete(0, "end")
-            self.nombre_entry.insert(0, texto_actual)
-        
-        elif texto_actual.isdigit():
-            self.nombre_entry.delete(0, "end")
-    
     def validar_entrada_numero(self, event):
 
         texto = self.numero_elementos_entry.get()
         if not texto.isdigit() or len(texto) > 2:
             texto_valido = "".join(filter(str.isdigit, texto))[:2]
-            self.numero_elementos_entry.delete(0, ctk.END)
+            self.numero_elementos_entry.delete(0, "end")
             self.numero_elementos_entry.insert(0, texto_valido)
+            self.numeros_label.configure(text="Se aceptan máximo 99 números aleatorios")
 
         if self.caja_opciones.get() == "Caracteres":
             if texto.isdigit() and int(texto) >= 52:
-                self.numero_elementos_entry.delete(0, ctk.END)
+                self.numero_elementos_entry.delete(0, "end")
                 self.numero_elementos_entry.insert(0, "51") 
+                self.numeros_label.configure(text="Se aceptan hasta 51 caracteres aleatorios")
 
     def bloquear_nombre(self):
         self.nombre_entry.insert(0, "U")
         self.nombre_entry.configure(state="disabled")
+

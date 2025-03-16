@@ -2,7 +2,7 @@ import customtkinter as ctk
 from Vista.Calculadora.Componentes.Generales.Lista import ListaConjunto
 
 class VentanaCrear(ctk.CTkToplevel):
-    def __init__(self, master, controlador, universal_existe, lista_conjuntos):
+    def __init__(self, master, controlador, lista_conjuntos, nombre_conjunto=None, conjunto=None):
         super().__init__(master=master)
         self.master = master
         self.transient(master)  
@@ -10,15 +10,21 @@ class VentanaCrear(ctk.CTkToplevel):
         self.iconbitmap("Vista//Materiales//icono.ico")
         self.controlador = controlador
         self.lista_conjuntos = lista_conjuntos
+        self.nombre_conjunto = nombre_conjunto
+        self.conjunto = conjunto
         
         self.crear_widgets()
         self.configurar_widgets()
         self.pack_widgets()
         
-        if not universal_existe:
+        if self.conjunto != None:
+            self.insertar_conjunto()
+        
+        if self.nombre_conjunto != None:
+            self.bloquear_nombre()
+        
+        if self.nombre_conjunto == 'U':
             self.title("Crear conjunto universal")
-            self.nombre_entry.insert(0, "U")
-            self.nombre_entry.configure(state="disabled")
         else:
             self.title("Crear Conjunto")
 
@@ -84,9 +90,30 @@ class VentanaCrear(ctk.CTkToplevel):
         self.crear_boton.pack(expand=True, fill="both", padx=60, pady=(5, 20))
     
     def insertar_elemento(self, evento):
+        elementos = self.elementos_lista.get_elementos()
         elemento = self.elemento_entry.get()
+        if elemento == "":
+            self.elementos_label.configure(text="Elemento vacío", text_color="red")
+            return
+
+        if elemento in elementos:
+            self.elementos_label.configure(text="Elemento ya existe", text_color="red")
+            return
+        
+        if self.nombre_conjunto != 'U':
+            if not elemento in self.controlador.get_conjunto("U"):
+                self.elementos_label.configure(text="El elemento no se encuentra en el universal", text_color="red")
+                return
+            
         self.elemento_entry.delete(0, "end")
         self.elementos_lista.agregar_conjunto(elemento)
+    
+    def insertar_conjunto(self):
+        self.elemento_entry.configure(state="disabled")
+        self.insertar_boton.configure(state="disabled")
+        lista_elementos = list(self.conjunto)
+        for elemento in lista_elementos:
+            self.elementos_lista.agregar_conjunto(elemento)
         
     def crear_conjunto(self, evento):
         nombre = self.nombre_entry.get()
@@ -119,5 +146,5 @@ class VentanaCrear(ctk.CTkToplevel):
             
             
     def bloquear_nombre(self):
-        self.nombre_entry.insert(0, "U")
+        self.nombre_entry.insert(0, self.nombre_conjunto)
         self.nombre_entry.configure(state="disabled")

@@ -29,3 +29,7 @@ class GeneradorConjuntos:
         if n > len(letras):
             pass
         return set(random.sample(letras, n))
+    
+    def generar_conjunto(self, universal, n):
+        lista_universal = list(universal)
+        return set(random.sample(lista_universal, n))

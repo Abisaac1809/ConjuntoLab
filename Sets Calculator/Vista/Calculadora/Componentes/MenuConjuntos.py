@@ -1,13 +1,10 @@
 import customtkinter as ctk
-import tkinter as tk
-from PIL import Image
-from Vista.Calculadora.Componentes.Generales.Animacion import WidgetAnimado
 from Vista.Calculadora.Componentes.Generales.Lista import ListaConjunto
 from Vista.Calculadora.Componentes.Ventanas.VentanaOpcion import VentanaOpcion
 
 
-class MenuAnimado(ctk.CTkFrame):
-    def __init__(self, padre, recorrido, alto, controlador):
+class MenuConjuntos(ctk.CTkFrame):
+    def __init__(self, padre, coordenadas, alto, controlador):
         super().__init__(master=padre)
         self.padre = padre
         self.tema = ctk.StringVar(value="dark")
@@ -15,28 +12,10 @@ class MenuAnimado(ctk.CTkFrame):
         self.universal_existe = False
         
         self.crear_widgets()
-        self.crear_boton_externo(padre)
+        self.controlador.set_lista_conjuntos_labels(self.lista_conjuntos)
         self.pack_widgets()
+        self.place(relx=coordenadas[0], rely=coordenadas[1], relwidth=0.3, relheight=alto)
 
-        self.frame_animado = WidgetAnimado(self, recorrido, alto)
-        
-    def crear_boton_externo(self, padre):
-        boton_imagen = ctk.CTkImage(
-            light_image=Image.open("Vista//Materiales//barras_dark.ico").resize((128, 128)),
-            dark_image=Image.open("Vista//Materiales//barras_dark.ico").resize((128, 128))
-            )
-        
-        self.boton_externo = ctk.CTkButton(
-            padre,
-            text="",
-            command=self.animar_menu,
-            fg_color=("#b4bcc1", "#2e3135"),
-            corner_radius=0,
-            image=boton_imagen
-            )
-        
-        self.boton_externo.place(relx=0.0, rely=0.05, relwidth=0.05, relheight=0.05)
-        self.boton_activado = True
 
     def crear_widgets(self):
         self.switch = ctk.CTkSwitch(
@@ -68,9 +47,6 @@ class MenuAnimado(ctk.CTkFrame):
         self.menu_label.pack(fill="x", pady = (50,20))
         self.menu_boton.pack(ipady=5)
         self.lista_conjuntos.pack(fill="both", expand=True, padx=20, pady=30)
-
-    def animar_menu(self):
-        self.frame_animado.animar()
         
     def crear_ventana(self):
         if (not "U" in self.lista_conjuntos.get_elementos()):
