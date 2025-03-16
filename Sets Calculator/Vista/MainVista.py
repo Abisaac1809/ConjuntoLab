@@ -24,3 +24,4 @@ class Aplicacion(ctk.CTk):
         
     def olvidar_frame(self):
         self.frame_principal.pack_forget()
+        self.frame_principal.destroy()

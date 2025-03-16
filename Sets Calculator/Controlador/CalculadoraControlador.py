@@ -16,6 +16,7 @@ class CalculadoraControlador():
     
     def get_lista_conjuntos_labels(self):
         return self.lista_conjuntos_labels
+    
     def crear_conjunto(self, nombre, conjunto):
         self.conjuntos[nombre] = conjunto
         
@@ -56,6 +57,7 @@ class CalculadoraControlador():
             texto = f"Comprensión: {{x | x ∈ {conjunto_ordenado}}}\n\n\nExtensión: {conjunto_ordenado}"
         if variable != None:
             variable.set("")
+            
         VentanaMostrar(self.vista, "Resultado", texto, conjunto=resultado, controlador=self)
 
 

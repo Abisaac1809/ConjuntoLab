@@ -4,6 +4,7 @@ from Vista.Calculadora.Componentes.Generales.Lista import ListaConjunto
 class VentanaCrear(ctk.CTkToplevel):
     def __init__(self, master, controlador, lista_conjuntos, nombre_conjunto=None, conjunto=None):
         super().__init__(master=master)
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
         self.master = master
         self.transient(master)  
         self.geometry("600x600")

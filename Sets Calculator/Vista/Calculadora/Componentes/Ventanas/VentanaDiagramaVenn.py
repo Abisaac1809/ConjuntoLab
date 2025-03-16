@@ -1,19 +1,33 @@
 import customtkinter as ctk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.pyplot import close
 from Modelo.venn import *
 import copy
 
 class VentanaDiagramVenn(ctk.CTkToplevel):
     def __init__(self, master, controlador):
         super().__init__(master=master)
+        self.protocol("WM_DELETE_WINDOW", self.close)
         self.title("Diagrama de Venn")
         self.geometry("800x800")
         self.controlador = controlador
         
-        self.show_diagrama_venn(self)
+        self.crear_widgets()
+        self.pack_widgets()
 
+    def crear_widgets(self):
+        self.canvas = FigureCanvasTkAgg(
+            self.get_diagrama_venn(),
+            master=self
+            )
+
+    def configurar_widgets(self):
+        pass
+    
+    def pack_widgets(self):
+        self.canvas.get_tk_widget().pack(expand=True, fill="both")
         
-    def show_diagrama_venn(self, master):
+    def get_diagrama_venn(self):
         self.diagramas = {
             2: lambda labels, nombres: venn2(labels=labels, names=nombres),
             3: lambda labels, nombres: venn3(labels=labels, names=nombres),
@@ -35,8 +49,13 @@ class VentanaDiagramVenn(ctk.CTkToplevel):
         fig, ax = self.diagramas.get(numero_conjuntos)(labels, nombres_conjuntos)
         ax.set_title("Diagrama de Venn")
         
-        diagrama_venn = FigureCanvasTkAgg(fig, master)
-        diagrama_venn.get_tk_widget().pack(expand=True, fill="both")
+        del diccionario_conjuntos
+        del nombres_conjuntos
+        del conjuntos
         
-        del diccionario_conjuntos 
+        return fig
 
+    def close(self):
+        self.canvas.get_tk_widget().destroy()
+        close(self.canvas.figure)
+        self.destroy()

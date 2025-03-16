@@ -3,6 +3,7 @@ import customtkinter as ctk
 class VentanaMostrar(ctk.CTkToplevel):
     def __init__(self, master, titulo, texto, conjunto=None, controlador=None):
         super().__init__(master=master)
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
         self.master = master
         self.geometry("800x600")
         self.iconbitmap("Vista//Materiales//icono.ico")

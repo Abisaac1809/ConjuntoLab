@@ -6,6 +6,7 @@ from Vista.Calculadora.Componentes.Ventanas.VentanaRandomConjunto import Ventana
 class VentanaOpcion(ctk.CTkToplevel):
     def __init__(self, master, controlador, universal_existe, lista_conjuntos):
         super().__init__(master=master)
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
         self.master = master
         self.transient(master)  
         self.geometry("400x200")

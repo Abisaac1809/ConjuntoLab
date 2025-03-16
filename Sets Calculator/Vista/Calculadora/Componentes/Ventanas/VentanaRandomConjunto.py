@@ -3,6 +3,7 @@ import customtkinter as ctk
 class VentanaRandomConjunto(ctk.CTkToplevel):
     def __init__(self, master, controlador, lista_conjuntos):
         super().__init__(master=master)
+        self.protocol("WM_DELETE_WINDOW", self.destroy)
         self.master = master
         self.transient(master)  
         self.geometry("600x500")
@@ -54,6 +55,7 @@ class VentanaRandomConjunto(ctk.CTkToplevel):
         self.nombre_entry.bind("<KeyRelease>", self.validar_entrada)
         self.numero_elementos_entry.bind("<KeyRelease>", self.validar_entrada_numero)
         self.nombre_entry.bind("<Return>", lambda evento: self.numero_elementos_entry.focus())
+        self.numero_elementos_entry.bind("<Return>", self.crear_conjunto)
         self.crear_boton.bind("<Button-1>", self.crear_conjunto)
 
     def pack_widgets(self):
